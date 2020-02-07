@@ -3,6 +3,7 @@ import json
 import os
 
 from settings import *
+from game.map.tile import Tile
 
 class SpriteSheet:
     def __init__(self, file_name):
@@ -11,5 +12,8 @@ class SpriteSheet:
             self.json = json.load(f)
         self.tiles = {}
         for tile in self.json[file_name]:
-            pos = self.json[file_name][tile]
-            self.tiles[tile] = pygame.Rect((pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+            tile_info = self.json[file_name][tile]
+            self.tiles[tile] = Tile(*tile_info["pos"], tile_info["solid"])
+
+    def get_objects(self):
+        return self.image, self.tiles
