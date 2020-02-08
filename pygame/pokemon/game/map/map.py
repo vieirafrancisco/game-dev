@@ -8,8 +8,8 @@ from game.map.spritesheet import SpriteSheet
 
 class Map:
     def __init__(self, rows, cols):
-        self.rows = max(rows, HEIGHT//TILE_SIZE)
-        self.cols = max(cols, WIDTH//TILE_SIZE)
+        self.rows = rows
+        self.cols = cols
         self.surface = pygame.Surface((self.rows * TILE_SIZE, self.cols * TILE_SIZE))
         self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
 
@@ -36,11 +36,11 @@ class RandomMap(Map):
             for i in range(w):
                 x = (i + self.dx)
                 dest = (i * TILE_SIZE, j * TILE_SIZE)
-                if x < 0 or y < 0 or x > w or y > h :
+                if x < 0 or y < 0 or x > self.cols or y > self.rows :
                     tile = self.tiles["water"].rect
                 else:
                     tile = self.rand_tiles[x % self.cols][y % self.rows].rect
-                if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
+                #if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
                 self.surface.blit(self.src_img, dest, tile)
         master.blit(self.surface, (0,0))
 

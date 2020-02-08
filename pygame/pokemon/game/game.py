@@ -16,7 +16,7 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = RandomMap(20, 20)
+        self.map = RandomMap(500, 500)
         self.player = Player(WIDTH//2,HEIGHT//2, self.map)
 
     def on_cleanup(self):
