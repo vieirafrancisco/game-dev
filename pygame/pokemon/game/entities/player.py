@@ -28,10 +28,10 @@ class Player:
         '''
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            self.map.dy += 1
-        if keys[pygame.K_DOWN]:
             self.map.dy -= 1
+        if keys[pygame.K_DOWN]:
+            self.map.dy += 1
         if keys[pygame.K_LEFT]:
-            self.map.dx += 1
-        if keys[pygame.K_RIGHT]:
             self.map.dx -= 1
+        if keys[pygame.K_RIGHT]:
+            self.map.dx += 1
