@@ -16,15 +16,15 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = RandomMap(20,20)
-        self.player = Player(0,0)
+        self.map = RandomMap(20, 20)
+        self.player = Player(0,0, self.map)
 
     def on_cleanup(self):
         pygame.quit()
 
     def on_render(self):
         self.map.show(self._disp_window)
-        self.player.show(self._disp_window)
+        self.player.show()
 
     def on_loop(self):
         pass
