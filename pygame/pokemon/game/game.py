@@ -17,14 +17,14 @@ class Game:
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
         self.map = RandomMap(500, 500)
-        self.player = Player(WIDTH//2,HEIGHT//2, self.map)
+        self.player = Player(T_WIDTH//2,T_HEIGHT//2)
 
     def on_cleanup(self):
         pygame.quit()
 
     def on_render(self):
         self.map.show(self._disp_window)
-        self.player.show()
+        self.player.show(self._disp_window)
 
     def on_loop(self):
         pass
@@ -32,7 +32,7 @@ class Game:
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
-        self.player.move()
+        self.player.move(self.map)
 
     def on_execute(self):
         self.on_init()

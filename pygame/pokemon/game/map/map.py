@@ -40,7 +40,7 @@ class RandomMap(Map):
                     tile = self.tiles["water"].rect
                 else:
                     tile = self.rand_tiles[x % self.cols][y % self.rows].rect
-                #if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
+                if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
                 self.surface.blit(self.src_img, dest, tile)
         master.blit(self.surface, (0,0))
 
