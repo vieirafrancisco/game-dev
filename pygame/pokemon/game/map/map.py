@@ -8,10 +8,12 @@ from game.map.spritesheet import SpriteSheet
 
 class Map:
     def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
-        self.surface = pygame.Surface((self.rows * TILE_SIZE, self.cols * TILE_SIZE))
+        self.rows = max(rows, T_HEIGHT) 
+        self.cols = max(cols, T_WIDTH)
+        self.surface = pygame.Surface((self.cols * TILE_SIZE, self.rows * TILE_SIZE))
         self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
+        self.dx = 0
+        self.dy = 0
 
     def show(self, master):
         for j in range(self.rows):
@@ -25,8 +27,6 @@ class RandomMap(Map):
     def __init__(self, rows, cols):
         Map.__init__(self, rows, cols)
         self.rand_tiles = [[random.choice(list(self.tiles.items()))[1] for _ in range(self.rows)] for _ in range(self.cols)]
-        self.dx = 0
-        self.dy = 0
 
     def show(self, master):
         w = WIDTH // TILE_SIZE
