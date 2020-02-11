@@ -1,7 +1,8 @@
+import os
 import pygame
 
 from settings import *
-from game.map.map import Map, RandomMap
+from game.map.map import Map, RandomMap, LoaderMap
 from game.entities.player import Player
 
 class Game:
@@ -16,7 +17,8 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = RandomMap(30, 30)
+        #self.map = RandomMap(30, 30)
+        self.map = LoaderMap(os.path.join("game","resources", "img", "maps", "map01.png"))
         self.player = Player(T_WIDTH//2,T_HEIGHT//2)
 
     def on_cleanup(self):

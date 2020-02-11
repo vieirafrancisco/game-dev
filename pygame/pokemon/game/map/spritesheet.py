@@ -11,9 +11,8 @@ class SpriteSheet:
         with open(os.path.join(RESOURCE_PATH, "json", "spritesheets.json"), "r") as f:
             self.json = json.load(f)
         self.tiles = {}
-        for tile in self.json[file_name]:
-            tile_info = self.json[file_name][tile]
-            self.tiles[tile] = Tile(*tile_info["pos"], tile_info["solid"])
+        for tile, attr  in self.json[file_name].items():
+            self.tiles[tile] = Tile(attr["pos"], tuple(attr["rgba"]), attr["solid"])
 
     def get_objects(self):
         return self.image, self.tiles

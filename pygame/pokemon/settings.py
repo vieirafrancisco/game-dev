@@ -10,3 +10,6 @@ T_HEIGHT = HEIGHT // TILE_SIZE
 
 # paths
 RESOURCE_PATH = os.path.join("game", "resources")
+
+# infinity
+INF = float('inf')
