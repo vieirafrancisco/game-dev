@@ -29,12 +29,11 @@ class Game:
         self.player.show(self._disp_window)
 
     def on_loop(self):
-        pass
+        self.player.move(self.map)
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
-        self.player.move(self.map)
 
     def on_execute(self):
         self.on_init()
