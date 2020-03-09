@@ -1,5 +1,10 @@
 {
     "32x32_map_tile_v4.png": {
+        "default": {
+            "pos": [7,5],
+            "solid": true,
+            "rgba": [0, 162, 232, 255]
+        },
         "grass": {
             "pos": [1,1],
             "solid": false,

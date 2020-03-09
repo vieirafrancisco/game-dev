@@ -57,7 +57,7 @@ class LoaderMap(Map):
                 x = (i + self.dx)
                 dest = (i * TILE_SIZE, j * TILE_SIZE)
                 if x < 0 or y < 0 or x > self.cols or y > self.rows :
-                    tile = self.tiles["water"].rect
+                    tile = self.tiles["default"].rect
                 else:
                     rgba = tuple(self.img.get_at((x % self.cols, y % self.rows)))
                     tile_type = self.similarity(rgba)
