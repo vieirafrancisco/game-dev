@@ -7,6 +7,7 @@ class Player:
         self.posx = posx
         self.posy = posy
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        self.speed = 3
 
     def show(self, surface):
         pygame.draw.rect(surface, (255,0,0), self.rect)
@@ -14,10 +15,10 @@ class Player:
     def move(self, m):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            m.dy -= 1
+            m.dy -= self.speed
         if keys[pygame.K_DOWN]:
-            m.dy += 1
+            m.dy += self.speed
         if keys[pygame.K_LEFT]:
-            m.dx -= 1
+            m.dx -= self.speed
         if keys[pygame.K_RIGHT]:
-            m.dx += 1
+            m.dx += self.speed
