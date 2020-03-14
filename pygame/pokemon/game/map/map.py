@@ -89,7 +89,7 @@ class PixeledMap(LoaderMap):
         x1 = (self.dx >> 5) + T_WIDTH
         y0 = self.dy >> 5
         y1 = (self.dy >> 5) + T_HEIGHT
-        print(x0, x1, y0, y1)
+        #print(x0, x1, y0, y1)
         for j in range(y0, y1 + 1):
             y = (j * TILE_SIZE - self.dy)
             for i in range(x0, x1 + 1):
