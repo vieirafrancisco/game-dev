@@ -12,7 +12,7 @@ class SpriteSheet:
             self.json = json.load(f)
         self.tiles = {}
         for tile, attr  in self.json[file_name].items():
-            self.tiles[tile] = Tile(attr["pos"], tuple(attr["rgba"]), attr["solid"])
+            self.tiles[tile] = Tile(tile, attr["pos"], tuple(attr["rgba"]), attr["solid"])
 
     def get_objects(self):
         return self.image, self.tiles

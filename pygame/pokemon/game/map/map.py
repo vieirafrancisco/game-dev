@@ -54,7 +54,7 @@ class LoaderMap(Map):
             for i in range(self.cols):
                 rgba = tuple(self.img.get_at((i, j)))
                 tile_type = self.similarity(rgba)
-                self.memo_tiles[i][j] = self.tiles[tile_type].rect
+                self.memo_tiles[i][j] = self.tiles[tile_type]
 
     def show(self, master):
         for j in range(T_HEIGHT):
@@ -65,7 +65,7 @@ class LoaderMap(Map):
                 if x < 0 or y < 0 or x >= self.cols or y >= self.rows :
                     tile = self.tiles["default"].rect
                 else:
-                    tile = self.memo_tiles[x % self.cols][y % self.rows]
+                    tile = self.memo_tiles[x % self.cols][y % self.rows].rect
                 if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
                 self.surface.blit(self.src_img, dest, tile)
         master.blit(self.surface, (0,0))
@@ -95,9 +95,12 @@ class PixeledMap(LoaderMap):
             for i in range(x0, x1 + 1):
                 x = (i * TILE_SIZE - self.dx)
                 dest = (x, y)
-                if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
-                    tile = self.memo_tiles[i][j]
-                else:
-                    tile = self.tiles["default"].rect
+                tile = self.get_tile(i, j).rect
                 self.surface.blit(self.src_img, dest, tile)
         master.blit(self.surface, (0,0))
+
+    def get_tile(self, i, j):
+        if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
+            return self.memo_tiles[i][j]
+        else:
+            return self.tiles["default"]
