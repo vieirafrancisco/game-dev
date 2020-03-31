@@ -7,8 +7,8 @@ from game.entities.entity import Entity
 from settings import *
 
 class Enemy(Entity):
-    def __init__(self, posx, posy, rage, walk_range=5):
-        Entity.__init__(self, posx, posy)
+    def __init__(self, posx, posy, rage, walk_range=5, solid=True):
+        Entity.__init__(self, posx, posy, solid)
         self.rage = rage
         self.walk_range = walk_range
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
