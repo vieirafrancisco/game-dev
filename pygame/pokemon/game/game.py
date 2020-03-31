@@ -4,6 +4,7 @@ import pygame
 from settings import *
 from game.map.map import Map, RandomMap, LoaderMap, PixeledMap
 from game.entities.player import Player
+from game.entities.enemy import Enemy
 
 class Game:
     def __init__(self):
@@ -17,8 +18,12 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = PixeledMap(os.path.join("game","resources", "img", "maps", "map01.png"))
+        self.map = PixeledMap(os.path.join("game","resources", "img", "maps", "map04.png"))
         self.player = Player(T_WIDTH//2, T_HEIGHT//2)
+        self.enemy = Enemy(10, 9, False)
+        self.enemy2 = Enemy(8, 11, False)
+        self.map.add_entity(self.enemy)
+        self.map.add_entity(self.enemy2)
 
     def on_cleanup(self):
         pygame.quit()
@@ -43,5 +48,5 @@ class Game:
             self.on_loop()
             self.on_render()
             pygame.display.flip()
-            #self.clock.tick(60)
+            self.clock.tick(60)
         self.on_cleanup()

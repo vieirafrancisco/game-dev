@@ -83,13 +83,15 @@ class LoaderMap(Map):
 class PixeledMap(LoaderMap):
     def __init__(self, image_url):
         LoaderMap.__init__(self, image_url)
+        self.entities = {}
 
     def show(self, master):
+        # corner pins
         x0 = self.dx >> 5
         x1 = (self.dx >> 5) + T_WIDTH
         y0 = self.dy >> 5
         y1 = (self.dy >> 5) + T_HEIGHT
-        #print(x0, x1, y0, y1)
+        print(x0, x1, y0, y1)
         for j in range(y0, y1 + 1):
             y = (j * TILE_SIZE - self.dy)
             for i in range(x0, x1 + 1):
@@ -97,6 +99,11 @@ class PixeledMap(LoaderMap):
                 dest = (x, y)
                 tile = self.get_tile(i, j).rect
                 self.surface.blit(self.src_img, dest, tile)
+        for j in range(y0, y1 + 1):
+            for i in range(x0, x1 + 1):
+                entity = self.get_entity(i, j)
+                if entity:
+                    entity.move(self)
         master.blit(self.surface, (0,0))
 
     def get_tile(self, i, j):
@@ -104,3 +111,16 @@ class PixeledMap(LoaderMap):
             return self.memo_tiles[i][j]
         else:
             return self.tiles["default"]
+
+    def add_entity(self, entity):
+        x, y = entity.get_pos()
+        if (x, y) not in self.entities.keys():
+            self.entities[(x, y)] = entity
+        else:
+            raise Exception("Entity position already taken!")
+    
+    def get_entity(self, x, y):
+        if (x, y) in self.entities.keys():
+            return self.entities[(x, y)]
+        else:
+            return None

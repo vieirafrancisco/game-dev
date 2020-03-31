@@ -16,7 +16,7 @@ class Player:
 
     def move(self, m):
         keys = pygame.key.get_pressed()
-        print(self.dir, self.ismov, self.posx, self.posy)
+        #print(self.dir, self.ismov, self.posx, self.posy)
 
         if keys[pygame.K_RIGHT] and not self.ismov:
             self.dir["RIGHT"] = 1
