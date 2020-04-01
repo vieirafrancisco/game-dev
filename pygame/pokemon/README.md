@@ -4,7 +4,9 @@ A game based on [PxG](https://www.pokexgames.com/#/home) game style!
 ## ToDo stuff
 
 ### Enemy:
-- [ ] random walk movement
-- [ ] respawn position
-- [ ] limit walk range (square walk space)
-- [ ] collision with other entities and map tiles
+- [x] random walk movement
+- [x] respawn position
+- [x] limit walk range (square walk space)
+- [x] collision with other entities and map tiles
+- [x] player collision with enemies (change entities position in the map class)
+- [ ] add probability of choice movement, look at the four positions and verify collision to calculate probablility

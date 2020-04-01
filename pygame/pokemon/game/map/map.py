@@ -5,6 +5,7 @@ import pygame
 
 from settings import *
 from game.map.spritesheet import SpriteSheet
+from game.entities.player import Player
 from game.map.utils.functions import euclidian_distance
 
 class Map:
@@ -102,7 +103,7 @@ class PixeledMap(LoaderMap):
         for j in range(y0, y1 + 1):
             for i in range(x0, x1 + 1):
                 entity = self.get_entity(i, j)
-                if entity:
+                if entity and not isinstance(entity, Player):
                     entity.move(self)
         master.blit(self.surface, (0,0))
 
@@ -124,3 +125,14 @@ class PixeledMap(LoaderMap):
             return self.entities[(x, y)]
         else:
             return None
+
+    def set_entity_position(self, entity, old_pos):
+        x, y = old_pos
+        if (x, y) in self.entities.keys():
+            self.entities.pop((x, y))
+            if entity not in list(self.entities.values()):
+                self.add_entity(entity)
+            else:
+                raise Exception("Entity already exist in the entities dictionary!")
+        else:
+            raise Exception("Entity position doesn't exist!")

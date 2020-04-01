@@ -13,3 +13,9 @@ RESOURCE_PATH = os.path.join("game", "resources")
 
 # infinity
 INF = float('inf')
+
+# constants
+UP = 0
+RIGHT = 1
+DOWN = 2
+LEFT = 3

@@ -46,6 +46,7 @@ class Player(Entity):
             m.dx += self.speed
 
         if m.dx % TILE_SIZE == 0 and m.dy % TILE_SIZE == 0:
+            old_pos = (self.posx, self.posy)
             if is_up:
                 self.posy -= 1
             if is_down:
@@ -54,16 +55,17 @@ class Player(Entity):
                 self.posx -= 1
             if is_right:
                 self.posx += 1
+            m.set_entity_position(self, old_pos)
             self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
             self.ismov = False
 
     def iscollide(self, tmap, x, y):
-        tile_is_solid = tmap.get_tile(x, y).solid
+        is_solid_tile = tmap.get_tile(x, y).solid
         if tmap.get_entity(x, y):
-            entity_is_solid = tmap.get_entity(x, y).solid
+            is_solid_entity = tmap.get_entity(x, y).solid
         else:
-            entity_is_solid = False
-        if tile_is_solid or entity_is_solid:
+            is_solid_entity = False
+        if is_solid_tile or is_solid_entity:
             return True
         else:
             return False 
