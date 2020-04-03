@@ -25,25 +25,30 @@ class Enemy(Entity):
     def move(self, tmap):
         if self.counter % self.velocity == 0:
             self.counter = 1
-            r = random.choice([UP, RIGHT, DOWN, LEFT])
-            x = self.posx
-            y = self.posy
-            if r == UP:
-                y -= 1
-            elif r == RIGHT:
-                x += 1
-            elif r == DOWN:
-                y += 1
-            elif r == LEFT:
-                x -= 1
-            is_solid_tile = tmap.get_tile(x, y).solid
-            entity = tmap.get_entity(x, y)
-            if entity:
-                is_solid_entity = entity.solid
-            else:
-                is_solid_entity = False
-            distance = euclidian_distance(x, y, self.respawn_posx, self.respawn_posy)
-            if not isinstance(entity, Player) and not is_solid_tile and not is_solid_entity and distance <= self.walk_range:
+            directions = []
+            for idx, (dx, dy) in enumerate(zip([0, 1, 0, -1], [-1, 0, 1, 0])):
+                x, y = (self.posx + dx, self.posy + dy)
+                is_solid_tile = tmap.get_tile(x, y).solid
+                entity = tmap.get_entity(x, y)
+                if entity:
+                    is_solid_entity = entity.solid
+                else:
+                    is_solid_entity = False
+                distance = euclidian_distance(x, y, self.respawn_posx, self.respawn_posy)
+                if not isinstance(entity, Player) and not is_solid_tile and not is_solid_entity and distance <= self.walk_range:
+                    directions.append(idx)
+            if directions != []:
+                direction = random.choice(directions)
+                x = self.posx
+                y = self.posy
+                if direction == UP:
+                    y -= 1
+                elif direction == RIGHT:
+                    x += 1
+                elif direction == DOWN:
+                    y += 1
+                elif direction == LEFT:
+                    x -= 1
                 old_pos = (self.posx, self.posy)
                 self.posx = x
                 self.posy = y
