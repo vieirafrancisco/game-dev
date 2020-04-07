@@ -3,39 +3,34 @@ import random
 import pygame
 from pygame.locals import *
 
-from game.entities.entity import Entity
-from game.entities.player import Player
+from game.entities.units.unity import Unity
 from game.utils.functions import euclidian_distance
 from settings import *
 
-class Enemy(Entity):
-    def __init__(self, posx, posy, rage, walk_range=5, solid=True):
-        Entity.__init__(self, posx, posy, solid)
+class Enemy(Unity):
+    def __init__(self, posx, posy, rage, health, speed, walk_range=5, solid=True):
+        Unity.__init__(self, posx, posy, health, speed, solid)
         self.respawn_posx = posx
         self.respawn_posy = posy
         self.rage = rage
         self.walk_range = walk_range
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
         self.counter = 0
-        self.velocity = 50
-
-    def show(self, surface):
-        pass
 
     def move(self, tmap):
-        if self.counter % self.velocity == 0:
+        if self.counter % self.speed == 0:
             self.counter = 1
             directions = []
             for idx, (dx, dy) in enumerate(zip([0, 1, 0, -1], [-1, 0, 1, 0])):
                 x, y = (self.posx + dx, self.posy + dy)
-                is_solid_tile = tmap.get_tile(x, y).solid
                 entity = tmap.get_entity(x, y)
                 if entity:
                     is_solid_entity = entity.solid
                 else:
                     is_solid_entity = False
+                out_of_map = x < 0 or x >= tmap.cols or y < 0 or y >= tmap.rows
                 distance = euclidian_distance(x, y, self.respawn_posx, self.respawn_posy)
-                if not isinstance(entity, Player) and not is_solid_tile and not is_solid_entity and distance <= self.walk_range:
+                if not isinstance(entity, Unity) and not is_solid_entity and distance <= self.walk_range and not out_of_map:
                     directions.append(idx)
             if directions != []:
                 direction = random.choice(directions)
@@ -53,7 +48,6 @@ class Enemy(Entity):
                 self.posx = x
                 self.posy = y
                 tmap.set_entity_position(self, old_pos)
-        tmap.surface.blit(self.surface, ((self.posx * TILE_SIZE) - tmap.dx, (self.posy * TILE_SIZE) - tmap.dy))
         self.counter += 1
 
     def get_respawn_pos(self):

@@ -1,22 +1,20 @@
 import pygame
 
 from settings import *
-from game.entities.entity import Entity
+from game.entities.units.unity import Unity
 
-class Player(Entity):
-    def __init__(self, posx, posy):
-        Entity.__init__(self, posx, posy, solid=False)
+class Player(Unity):
+    def __init__(self, posx, posy, health, speed):
+        Unity.__init__(self, posx, posy, health, speed, solid=False)
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-        self.speed = 2
         self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
         self.ismov = False
 
     def show(self, surface):
         pygame.draw.rect(surface, (255,0,0), self.rect)
 
-    def move(self, m):
+    def move(self, tmap):
         keys = pygame.key.get_pressed()
-        #print(self.dir, self.ismov, self.posx, self.posy)
         if keys[pygame.K_RIGHT] and not self.ismov:
             self.dir["RIGHT"] = 1
             self.ismov = True
@@ -29,20 +27,19 @@ class Player(Entity):
         if keys[pygame.K_UP] and not self.ismov:
             self.dir["UP"] = 1
             self.ismov = True
-        is_up = self.dir["UP"] and not self.iscollide(m, self.posx, self.posy-1)
-        is_down = self.dir["DOWN"] and not self.iscollide(m, self.posx, self.posy+1)
-        is_left = self.dir["LEFT"] and not self.iscollide(m, self.posx-1, self.posy)
-        is_right = self.dir["RIGHT"] and not self.iscollide(m, self.posx+1, self.posy)
+        is_up = self.dir["UP"] and not self.iscollide(tmap, self.posx, self.posy-1)
+        is_down = self.dir["DOWN"] and not self.iscollide(tmap, self.posx, self.posy+1)
+        is_left = self.dir["LEFT"] and not self.iscollide(tmap, self.posx-1, self.posy)
+        is_right = self.dir["RIGHT"] and not self.iscollide(tmap, self.posx+1, self.posy)
         if is_up:
-            m.dy -= self.speed
+            tmap.dy -= self.speed
         if is_down:
-            m.dy += self.speed
+            tmap.dy += self.speed
         if is_left:
-            m.dx -= self.speed
+            tmap.dx -= self.speed
         if is_right:
-            m.dx += self.speed
-        if m.dx % TILE_SIZE == 0 and m.dy % TILE_SIZE == 0:
-            old_pos = (self.posx, self.posy)
+            tmap.dx += self.speed
+        if tmap.dx % TILE_SIZE == 0 and tmap.dy % TILE_SIZE == 0:
             if is_up:
                 self.posy -= 1
             if is_down:
@@ -51,17 +48,17 @@ class Player(Entity):
                 self.posx -= 1
             if is_right:
                 self.posx += 1
-            m.set_entity_position(self, old_pos)
             self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
             self.ismov = False
 
     def iscollide(self, tmap, x, y):
-        is_solid_tile = tmap.get_tile(x, y).solid
-        if tmap.get_entity(x, y):
-            is_solid_entity = tmap.get_entity(x, y).solid
+        entity = tmap.get_entity(x, y)
+        if entity:
+            is_solid_entity = entity.solid
         else:
             is_solid_entity = False
-        if is_solid_tile or is_solid_entity:
+        out_of_map = x < 0 or x >= tmap.cols or y < 0 or y >= tmap.rows
+        if is_solid_entity or out_of_map:
             return True
         else:
             return False 

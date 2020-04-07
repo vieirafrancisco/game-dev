@@ -15,3 +15,10 @@ A game based on [PxG](https://www.pokexgames.com/#/home) game style!
 ### Animation:
 - [ ] create logic to animation
 - [ ] create player animation
+
+### Refactoring code:
+- [ ] create camera class to render the images in the screen (tiles and entities)
+- [ ] unify tiles and entities to entities objects
+- [ ] instead of tiles and entities lists, create a stack of entities idexed by the tile position in the map
+- [ ] refactor entity collision verification based on the top entity in the stack in the map
+- [ ] map class as an singleton class?

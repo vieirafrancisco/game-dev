@@ -3,8 +3,8 @@ import pygame
 
 from settings import *
 from game.map.map import Map, RandomMap, LoaderMap, PixeledMap
-from game.entities.player import Player
-from game.entities.enemy import Enemy
+from game.entities.units.player import Player
+from game.entities.units.enemy import Enemy
 
 class Game:
     def __init__(self):
@@ -18,12 +18,12 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = PixeledMap(os.path.join("game","resources", "img", "maps", "map05.png"))
-        self.player = Player(T_WIDTH//2, T_HEIGHT//2)
-        self.enemy = Enemy(10, 9, False, walk_range=3)
-        self.enemy2 = Enemy(2, 8, False, walk_range=3)
-        self.enemy3 = Enemy(13, 3, False, walk_range=3)
-        self.map.add_entity(self.player)
+        self.map = PixeledMap(os.path.join("game","resources", "img", "maps", "map06.png"))
+        self.player = Player(T_WIDTH//2, T_HEIGHT//2, 100, 2)
+        self.enemy = Enemy(10, 9, False, 100, 50, walk_range=3)
+        self.enemy2 = Enemy(2, 8, False, 100, 50, walk_range=3)
+        self.enemy3 = Enemy(13, 3, False, 100, 50, walk_range=3)
+        #self.map.add_entity(self.player)
         self.map.add_entity(self.enemy)
         self.map.add_entity(self.enemy2)
         self.map.add_entity(self.enemy3)
@@ -37,6 +37,7 @@ class Game:
 
     def on_loop(self):
         self.player.move(self.map)
+        pygame.display.set_caption(f"Pokémon - FPS: {self.clock.get_fps()}")
 
     def on_event(self, event):
         if event.type == pygame.QUIT:

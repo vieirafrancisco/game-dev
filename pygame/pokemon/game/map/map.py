@@ -4,8 +4,9 @@ import random
 import pygame
 
 from settings import *
-from game.map.spritesheet import SpriteSheet
-from game.entities.player import Player
+from game.graphics.spritesheet import SpriteSheet
+from game.entities.units.unity import Unity
+from game.entities.objects.ground import Ground
 from game.map.utils.functions import euclidian_distance
 
 class Map:
@@ -50,12 +51,14 @@ class LoaderMap(Map):
     def __init__(self, image_url):
         self.img = pygame.image.load(image_url)
         Map.__init__(self, self.img.get_height(), self.img.get_width())
-        self.memo_tiles = [[0 for _ in range(self.rows)] for _ in range(self.cols)]
+        self.entities = {}
         for j in range(self.rows):
             for i in range(self.cols):
                 rgba = tuple(self.img.get_at((i, j)))
-                tile_type = self.similarity(rgba)
-                self.memo_tiles[i][j] = self.tiles[tile_type]
+                tile = self.similarity(rgba)
+                g = Ground(i, j, tile.solid)
+                g.surface.blit(self.src_img, (0, 0), tile)
+                self.entities[(i, j)] = g
 
     def show(self, master):
         for j in range(T_HEIGHT):
@@ -72,19 +75,18 @@ class LoaderMap(Map):
         master.blit(self.surface, (0,0))
 
     def similarity(self, rgba):
-        best_tile = ''
+        best_tile = None
         m = INF
         for tile, obj in self.tiles.items():
             dist = euclidian_distance(rgba, obj.rgba)
             if dist < m:
                 m = dist
-                best_tile = tile
+                best_tile = obj
         return best_tile
 
 class PixeledMap(LoaderMap):
     def __init__(self, image_url):
         LoaderMap.__init__(self, image_url)
-        self.entities = {}
 
     def show(self, master):
         # corner pins
@@ -98,41 +100,36 @@ class PixeledMap(LoaderMap):
             for i in range(x0, x1 + 1):
                 x = (i * TILE_SIZE - self.dx)
                 dest = (x, y)
-                tile = self.get_tile(i, j).rect
-                self.surface.blit(self.src_img, dest, tile)
-        for j in range(y0, y1 + 1):
-            for i in range(x0, x1 + 1):
-                entity = self.get_entity(i, j)
-                if entity and not isinstance(entity, Player):
-                    entity.move(self)
+                if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
+                    entity = self.get_entity(i, j)
+                    entity.show(self.surface, dest)
+                    self.update(entity)
+                else:
+                    self.surface.blit(self.src_img, dest, self.tiles["default"])
         master.blit(self.surface, (0,0))
 
-    def get_tile(self, i, j):
-        if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
-            return self.memo_tiles[i][j]
-        else:
-            return self.tiles["default"]
+    def update(self, entity):
+        top_entity = entity.get_top()
+        if isinstance(top_entity, Unity):
+            top_entity.move(self)
 
     def add_entity(self, entity):
         x, y = entity.get_pos()
-        if (x, y) not in self.entities.keys():
-            self.entities[(x, y)] = entity
+        if (x, y) in self.entities.keys():
+            self.entities[(x, y)].add_child(entity)
         else:
-            raise Exception("Entity position already taken!")
+            raise Exception(f"Entity position {(x, y)} doesn't exist!")
     
     def get_entity(self, x, y):
         if (x, y) in self.entities.keys():
-            return self.entities[(x, y)]
+            return self.entities[(x, y)].get_top()
         else:
             return None
 
     def set_entity_position(self, entity, old_pos):
         x, y = old_pos
         if (x, y) in self.entities.keys():
-            self.entities.pop((x, y))
-            if entity not in list(self.entities.values()):
-                self.add_entity(entity)
-            else:
-                raise Exception("Entity already exist in the entities dictionary!")
+            entity.parent.update_surface()
+            self.add_entity(entity)
         else:
             raise Exception("Entity position doesn't exist!")
