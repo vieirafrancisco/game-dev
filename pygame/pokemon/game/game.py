@@ -23,7 +23,7 @@ class Game:
         self.enemy = Enemy(10, 9, False, 100, 50, walk_range=3)
         self.enemy2 = Enemy(2, 8, False, 100, 50, walk_range=3)
         self.enemy3 = Enemy(13, 3, False, 100, 50, walk_range=3)
-        #self.map.add_entity(self.player)
+        self.map.add_entity(self.player)
         self.map.add_entity(self.enemy)
         self.map.add_entity(self.enemy2)
         self.map.add_entity(self.enemy3)

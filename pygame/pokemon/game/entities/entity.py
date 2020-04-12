@@ -14,10 +14,13 @@ class Entity(ABC):
         self.parent = None
         self.child = None
 
+    def start(self, tmap, surface, dest):
+        self.show(surface, dest)
+        if self.child is not None:
+            self.child.start(tmap, self.surface, (0, 0))
+
     def show(self, surface, dest):
         surface.blit(self.surface, dest)
-        if self.child is not None:
-            self.child.show(self.surface, (0, 0))
 
     def update_surface(self):
         self.child = None

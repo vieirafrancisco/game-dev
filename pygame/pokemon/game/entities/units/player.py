@@ -10,6 +10,9 @@ class Player(Unity):
         self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
         self.ismov = False
 
+    def start(self, tmap, surface, dest):
+        pass
+
     def show(self, surface):
         pygame.draw.rect(surface, (255,0,0), self.rect)
 
@@ -40,6 +43,7 @@ class Player(Unity):
         if is_right:
             tmap.dx += self.speed
         if tmap.dx % TILE_SIZE == 0 and tmap.dy % TILE_SIZE == 0:
+            old_pos = self.posx, self.posy
             if is_up:
                 self.posy -= 1
             if is_down:
@@ -50,6 +54,7 @@ class Player(Unity):
                 self.posx += 1
             self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
             self.ismov = False
+            tmap.set_entity_position(self, old_pos)
 
     def iscollide(self, tmap, x, y):
         entity = tmap.get_entity(x, y)

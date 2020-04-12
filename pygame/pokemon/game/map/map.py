@@ -102,8 +102,7 @@ class PixeledMap(LoaderMap):
                 dest = (x, y)
                 if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
                     entity = self.get_entity(i, j)
-                    entity.show(self.surface, dest)
-                    self.update(entity)
+                    entity.start(self, self.surface, dest)
                 else:
                     self.surface.blit(self.src_img, dest, self.tiles["default"])
         master.blit(self.surface, (0,0))

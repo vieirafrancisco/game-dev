@@ -17,6 +17,12 @@ class Enemy(Unity):
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
         self.counter = 0
 
+    def start(self, tmap, surface, dest):
+        self.show(surface, dest)
+        self.move(tmap)
+        if self.child is not None:
+            self.child.start(tmap, surface, dest)
+
     def move(self, tmap):
         if self.counter % self.speed == 0:
             self.counter = 1
