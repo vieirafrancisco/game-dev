@@ -9,14 +9,11 @@ class Player(Unity):
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
         self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
         self.ismov = False
-
-    def start(self, tmap, surface, dest):
-        pass
-
+        
     def show(self, surface):
         pygame.draw.rect(surface, (255,0,0), self.rect)
 
-    def move(self, tmap):
+    def move(self, camera):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] and not self.ismov:
             self.dir["RIGHT"] = 1
@@ -30,19 +27,19 @@ class Player(Unity):
         if keys[pygame.K_UP] and not self.ismov:
             self.dir["UP"] = 1
             self.ismov = True
-        is_up = self.dir["UP"] and not self.iscollide(tmap, self.posx, self.posy-1)
-        is_down = self.dir["DOWN"] and not self.iscollide(tmap, self.posx, self.posy+1)
-        is_left = self.dir["LEFT"] and not self.iscollide(tmap, self.posx-1, self.posy)
-        is_right = self.dir["RIGHT"] and not self.iscollide(tmap, self.posx+1, self.posy)
+        is_up = self.dir["UP"] and not self.iscollide(camera, self.posx, self.posy-1)
+        is_down = self.dir["DOWN"] and not self.iscollide(camera, self.posx, self.posy+1)
+        is_left = self.dir["LEFT"] and not self.iscollide(camera, self.posx-1, self.posy)
+        is_right = self.dir["RIGHT"] and not self.iscollide(camera, self.posx+1, self.posy)
         if is_up:
-            tmap.dy -= self.speed
+            camera.dy -= self.speed
         if is_down:
-            tmap.dy += self.speed
+            camera.dy += self.speed
         if is_left:
-            tmap.dx -= self.speed
+            camera.dx -= self.speed
         if is_right:
-            tmap.dx += self.speed
-        if tmap.dx % TILE_SIZE == 0 and tmap.dy % TILE_SIZE == 0:
+            camera.dx += self.speed
+        if camera.dx % TILE_SIZE == 0 and camera.dy % TILE_SIZE == 0:
             old_pos = self.posx, self.posy
             if is_up:
                 self.posy -= 1
@@ -54,9 +51,9 @@ class Player(Unity):
                 self.posx += 1
             self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
             self.ismov = False
-            tmap.set_entity_position(self, old_pos)
 
-    def iscollide(self, tmap, x, y):
+    def iscollide(self, camera, x, y):
+        tmap = camera.tmap
         entity = tmap.get_entity(x, y)
         if entity:
             is_solid_entity = entity.solid

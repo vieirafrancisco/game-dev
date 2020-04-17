@@ -10,5 +10,5 @@ class Unity(Entity):
         self.speed = speed
 
     @abstractmethod
-    def move(self, tmap):
+    def move(self, camera):
         pass

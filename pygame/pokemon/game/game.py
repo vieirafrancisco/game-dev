@@ -3,6 +3,7 @@ import pygame
 
 from settings import *
 from game.map.map import Map, RandomMap, LoaderMap, PixeledMap
+from game.map.camera import Camera
 from game.entities.units.player import Player
 from game.entities.units.enemy import Enemy
 
@@ -23,21 +24,20 @@ class Game:
         self.enemy = Enemy(10, 9, False, 100, 50, walk_range=3)
         self.enemy2 = Enemy(2, 8, False, 100, 50, walk_range=3)
         self.enemy3 = Enemy(13, 3, False, 100, 50, walk_range=3)
-        self.map.add_entity(self.player)
         self.map.add_entity(self.enemy)
         self.map.add_entity(self.enemy2)
         self.map.add_entity(self.enemy3)
+        self.camera = Camera(self.player, self.map)
 
     def on_cleanup(self):
         pygame.quit()
 
     def on_render(self):
-        self.map.show(self._disp_window)
-        self.player.show(self._disp_window)
+        self.camera.show(self._disp_window)
 
     def on_loop(self):
-        self.player.move(self.map)
-        pygame.display.set_caption(f"Pokémon - FPS: {self.clock.get_fps()}")
+        self.camera.update()
+        pygame.display.set_caption(f"Pokémon - FPS: {round(self.clock.get_fps(), 1)}")
 
     def on_event(self, event):
         if event.type == pygame.QUIT:

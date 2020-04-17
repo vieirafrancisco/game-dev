@@ -15,8 +15,6 @@ class Map:
         self.cols = cols
         self.surface = pygame.Surface((WIDTH, HEIGHT))
         self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
-        self.dx = 0
-        self.dy = 0
 
     def show(self, master):
         for j in range(self.rows):
@@ -87,30 +85,6 @@ class LoaderMap(Map):
 class PixeledMap(LoaderMap):
     def __init__(self, image_url):
         LoaderMap.__init__(self, image_url)
-
-    def show(self, master):
-        # corner pins
-        x0 = self.dx >> 5
-        x1 = (self.dx >> 5) + T_WIDTH
-        y0 = self.dy >> 5
-        y1 = (self.dy >> 5) + T_HEIGHT
-        print(x0, x1, y0, y1)
-        for j in range(y0, y1 + 1):
-            y = (j * TILE_SIZE - self.dy)
-            for i in range(x0, x1 + 1):
-                x = (i * TILE_SIZE - self.dx)
-                dest = (x, y)
-                if i >= 0 and j >= 0 and i < self.cols and j < self.rows:
-                    entity = self.get_entity(i, j)
-                    entity.start(self, self.surface, dest)
-                else:
-                    self.surface.blit(self.src_img, dest, self.tiles["default"])
-        master.blit(self.surface, (0,0))
-
-    def update(self, entity):
-        top_entity = entity.get_top()
-        if isinstance(top_entity, Unity):
-            top_entity.move(self)
 
     def add_entity(self, entity):
         x, y = entity.get_pos()

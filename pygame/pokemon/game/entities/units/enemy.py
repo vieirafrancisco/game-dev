@@ -23,7 +23,8 @@ class Enemy(Unity):
         if self.child is not None:
             self.child.start(tmap, surface, dest)
 
-    def move(self, tmap):
+    def move(self, camera):
+        tmap = camera.tmap
         if self.counter % self.speed == 0:
             self.counter = 1
             directions = []
@@ -36,7 +37,7 @@ class Enemy(Unity):
                     is_solid_entity = False
                 out_of_map = x < 0 or x >= tmap.cols or y < 0 or y >= tmap.rows
                 distance = euclidian_distance(x, y, self.respawn_posx, self.respawn_posy)
-                if not isinstance(entity, Unity) and not is_solid_entity and distance <= self.walk_range and not out_of_map:
+                if not isinstance(entity, Unity) and not is_solid_entity and distance <= self.walk_range and not out_of_map and (x, y) != camera.player.get_pos():
                     directions.append(idx)
             if directions != []:
                 direction = random.choice(directions)
