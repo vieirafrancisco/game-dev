@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 
 from game.entities.units.unity import Unity
-from game.utils.functions import euclidian_distance
+from game.utils.functions import e_dist
 from settings import *
 
 class Enemy(Unity):
@@ -27,35 +27,26 @@ class Enemy(Unity):
         tmap = camera.tmap
         if self.counter % self.speed == 0:
             self.counter = 1
-            directions = []
-            for idx, (dx, dy) in enumerate(zip([0, 1, 0, -1], [-1, 0, 1, 0])):
-                x, y = (self.posx + dx, self.posy + dy)
-                entity = tmap.get_entity(x, y)
-                if entity:
-                    is_solid_entity = entity.solid
-                else:
-                    is_solid_entity = False
-                out_of_map = x < 0 or x >= tmap.cols or y < 0 or y >= tmap.rows
-                distance = euclidian_distance(x, y, self.respawn_posx, self.respawn_posy)
-                if not isinstance(entity, Unity) and not is_solid_entity and distance <= self.walk_range and not out_of_map and (x, y) != camera.player.get_pos():
-                    directions.append(idx)
-            if directions != []:
+            x, y = curr_position = self.get_pos()
+            walk_possibilities = list(zip([x, x+1, x, x-1], [y-1, y, y+1, y]))
+            directions = list(filter(
+                lambda wp: self.can_move(camera, wp),
+                walk_possibilities))
+            if len(directions) > 0:
                 direction = random.choice(directions)
-                x = self.posx
-                y = self.posy
-                if direction == UP:
-                    y -= 1
-                elif direction == RIGHT:
-                    x += 1
-                elif direction == DOWN:
-                    y += 1
-                elif direction == LEFT:
-                    x -= 1
-                old_pos = (self.posx, self.posy)
-                self.posx = x
-                self.posy = y
-                tmap.set_entity_position(self, old_pos)
+                dx, dy = direction
+                self.posx = dx
+                self.posy = dy
+                tmap.set_entity_position(self, curr_position)
         self.counter += 1
+
+    def can_move(self, camera, wp):
+        result = all([
+            not camera.tmap.has_collision(*wp),
+            not camera.is_player(*wp),
+            e_dist(wp, self.get_respawn_pos()) <= self.walk_range
+        ])
+        return result
 
     def get_respawn_pos(self):
         return (self.respawn_posx, self.respawn_posy)

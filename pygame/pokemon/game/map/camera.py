@@ -28,3 +28,9 @@ class Camera:
 
     def update(self):
         self.player.move(self)
+
+    def is_player(self, x, y):
+        if (x, y) == self.player.get_pos():
+            return True
+        else:
+            return False

@@ -7,7 +7,7 @@ from settings import *
 from game.graphics.spritesheet import SpriteSheet
 from game.entities.units.unity import Unity
 from game.entities.objects.ground import Ground
-from game.map.utils.functions import euclidian_distance
+from game.utils.functions import e_dist
 
 class Map:
     def __init__(self, rows, cols):
@@ -15,35 +15,6 @@ class Map:
         self.cols = cols
         self.surface = pygame.Surface((WIDTH, HEIGHT))
         self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
-
-    def show(self, master):
-        for j in range(self.rows):
-            for i in range(self.cols):
-                dest = (i * TILE_SIZE, j * TILE_SIZE)
-                self.surface.blit(self.src_img, dest, self.tiles["grass"].rect)
-        master.blit(self.surface, (0,0))
-
-
-class RandomMap(Map):
-    def __init__(self, rows, cols):
-        Map.__init__(self, rows, cols)
-        self.rand_tiles = [[random.choice(list(self.tiles.items()))[1] for _ in range(self.rows)] for _ in range(self.cols)]
-
-    def show(self, master):
-        w = WIDTH // TILE_SIZE
-        h = HEIGHT // TILE_SIZE
-        for j in range(h):
-            y = (j + self.dy)
-            for i in range(w):
-                x = (i + self.dx)
-                dest = (i * TILE_SIZE, j * TILE_SIZE)
-                if x < 0 or y < 0 or x > self.cols or y > self.rows :
-                    tile = self.tiles["water"].rect
-                else:
-                    tile = self.rand_tiles[x % self.cols][y % self.rows].rect
-                if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
-                self.surface.blit(self.src_img, dest, tile)
-        master.blit(self.surface, (0,0))
 
 class LoaderMap(Map):
     def __init__(self, image_url):
@@ -57,34 +28,6 @@ class LoaderMap(Map):
                 g = Ground(i, j, tile.solid)
                 g.surface.blit(self.src_img, (0, 0), tile)
                 self.entities[(i, j)] = g
-
-    def show(self, master):
-        for j in range(T_HEIGHT):
-            y = (j + self.dy)
-            for i in range(T_WIDTH):
-                x = (i + self.dx)
-                dest = (i * TILE_SIZE, j * TILE_SIZE)
-                if x < 0 or y < 0 or x >= self.cols or y >= self.rows :
-                    tile = self.tiles["default"].rect
-                else:
-                    tile = self.memo_tiles[x % self.cols][y % self.rows].rect
-                if i==0 and j==0: print(i, j, self.dx, self.dy, x, y)
-                self.surface.blit(self.src_img, dest, tile)
-        master.blit(self.surface, (0,0))
-
-    def similarity(self, rgba):
-        best_tile = None
-        m = INF
-        for tile, obj in self.tiles.items():
-            dist = euclidian_distance(rgba, obj.rgba)
-            if dist < m:
-                m = dist
-                best_tile = obj
-        return best_tile
-
-class PixeledMap(LoaderMap):
-    def __init__(self, image_url):
-        LoaderMap.__init__(self, image_url)
 
     def add_entity(self, entity):
         x, y = entity.get_pos()
@@ -106,3 +49,39 @@ class PixeledMap(LoaderMap):
             self.add_entity(entity)
         else:
             raise Exception("Entity position doesn't exist!")
+
+    def is_instance_of(self, x, y, cls_ref):
+        entity = self.get_entity(x, y)
+        if entity is not None:
+            return isinstance(entity, cls_ref)
+        return False
+
+    def is_solid(self, x, y):
+        entity = self.get_entity(x, y)
+        if entity is not None:
+            return entity.solid
+        return False
+
+    def is_out_of_map(self, x, y):
+        if x < 0 or x >= self.cols or y < 0 or y >= self.rows:
+            return True
+        else:
+            return False
+
+    def has_collision(self, x, y):
+        result = any([
+            self.is_instance_of(x, y, Unity),
+            self.is_solid(x, y),
+            self.is_out_of_map(x, y)
+        ])
+        return result
+
+    def similarity(self, rgba):
+        best_tile = None
+        m = INF
+        for tile, obj in self.tiles.items():
+            dist = e_dist(rgba, obj.rgba)
+            if dist < m:
+                m = dist
+                best_tile = obj
+        return best_tile

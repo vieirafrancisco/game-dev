@@ -1,9 +1,10 @@
 import math
 
-def euclidian_distance(x0, y0, x1, y1):
-    x = (x0-x1) ** 2
-    y = (y0-y1) ** 2
-    return math.floor(math.sqrt(x + y))
+def e_dist(a, b): # euclidian distance
+    dist = 0
+    for a_i, b_i in zip(a, b):
+        dist += (a_i - b_i) ** 2
+    return math.floor(math.sqrt(dist))
 
 def walk_distance(curr_pos, rsp_pos, wr):
     x, y = curr_pos

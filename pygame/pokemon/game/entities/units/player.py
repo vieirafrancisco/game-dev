@@ -27,10 +27,10 @@ class Player(Unity):
         if keys[pygame.K_UP] and not self.ismov:
             self.dir["UP"] = 1
             self.ismov = True
-        is_up = self.dir["UP"] and not self.iscollide(camera, self.posx, self.posy-1)
-        is_down = self.dir["DOWN"] and not self.iscollide(camera, self.posx, self.posy+1)
-        is_left = self.dir["LEFT"] and not self.iscollide(camera, self.posx-1, self.posy)
-        is_right = self.dir["RIGHT"] and not self.iscollide(camera, self.posx+1, self.posy)
+        is_up = self.dir["UP"] and not camera.tmap.has_collision(self.posx, self.posy-1)
+        is_down = self.dir["DOWN"] and not camera.tmap.has_collision(self.posx, self.posy+1)
+        is_left = self.dir["LEFT"] and not camera.tmap.has_collision(self.posx-1, self.posy)
+        is_right = self.dir["RIGHT"] and not camera.tmap.has_collision(self.posx+1, self.posy)
         if is_up:
             camera.dy -= self.speed
         if is_down:
@@ -51,16 +51,3 @@ class Player(Unity):
                 self.posx += 1
             self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
             self.ismov = False
-
-    def iscollide(self, camera, x, y):
-        tmap = camera.tmap
-        entity = tmap.get_entity(x, y)
-        if entity:
-            is_solid_entity = entity.solid
-        else:
-            is_solid_entity = False
-        out_of_map = x < 0 or x >= tmap.cols or y < 0 or y >= tmap.rows
-        if is_solid_entity or out_of_map:
-            return True
-        else:
-            return False 

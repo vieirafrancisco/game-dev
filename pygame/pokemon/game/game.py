@@ -2,7 +2,7 @@ import os
 import pygame
 
 from settings import *
-from game.map.map import Map, RandomMap, LoaderMap, PixeledMap
+from game.map.map import Map, LoaderMap
 from game.map.camera import Camera
 from game.entities.units.player import Player
 from game.entities.units.enemy import Enemy
@@ -19,7 +19,7 @@ class Game:
         self.running = True
         self._disp_window = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = PixeledMap(os.path.join("game","resources", "img", "maps", "map06.png"))
+        self.map = LoaderMap(os.path.join("game","resources", "img", "maps", "map06.png"))
         self.player = Player(T_WIDTH//2, T_HEIGHT//2, 100, 2)
         self.enemy = Enemy(10, 9, False, 100, 50, walk_range=3)
         self.enemy2 = Enemy(2, 8, False, 100, 50, walk_range=3)
