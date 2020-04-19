@@ -34,9 +34,7 @@ class Enemy(Unity):
                 walk_possibilities))
             if len(directions) > 0:
                 direction = random.choice(directions)
-                dx, dy = direction
-                self.posx = dx
-                self.posy = dy
+                self.posx, self.posy = direction
                 tmap.set_entity_position(self, curr_position)
         self.counter += 1
 
