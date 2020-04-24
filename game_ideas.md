@@ -29,3 +29,18 @@ Os inimigos andam em ordas e te seguem constatemente, o seu objetivo é encontra
 - Somente o jogador que colocar a armadilha pode encherga-la
 - Se um jogador pegar o baú do outro jogador ele domina o territorio e as armadilhas ficam a sua posse
 - Ofuscar cisão das construções dos oponentes? (provavelmente não)
+
+## Jogo de robôs (zords)
+
+**Descrição:** Jogo 2D de visão ortogonal tile-based, em que o jogador pode ter uma coleção de robôs na qual pode usar para combater os inimigos. Tem a posibilidade de combinar três (inicialmente só três) robôs em um só. Para criar esse novo robô deverá posicionar três robôs em três slots - slot de cima, slot do lado esquerdo e slot do lado direito. Cada robô terá uma habilidade especial associado a cada slot, ou seja, um mesmo robô tem três habilidades diferentes, e a que será utilizada dependera em qual slot ele estará posicionado.  
+Cada robô menor tem uma habilidade básica associada a ele, e ele pode ser usado para combater normalmente. Porém alguns inimigos exigirão que a combinação entre os robôs seja feita.
+
+
+**Características:**
+- O jogo é do tipo shoot de particulas (mira controlada pelo mouse), com mecânica hack in slash
+- O jogador é quem se transforma nos robôs e também nos robôs combinados
+- Os robôs seram elementais, então terá um sistema de efetividade nos combates
+- Existiram arenas onde os inimigos estão posicionados (parecido com o jogo warframe)
+- Mapas gerados automáticamente
+- Itens em locais randômicos (tendo a posibilidade de não conter item algum)
+- Existirá um lugar central onde terá acesso as arenas e aos NPCs (caso o game for multiplayer terá acesso a outros players também)
