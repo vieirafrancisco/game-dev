@@ -3,28 +3,40 @@ from pygame.locals import *
 
 from settings import *
 
-class Player:
+vector = pygame.Vector2
+
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h):
-        self.rect = pygame.Rect(x, y, w, h)
-        self.gravity = 9.8
-        self.speed = 10
-        self.lift = 20
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((w, h))
+        self.image.fill((255,255,255))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.pos = vector(x, y)
+        self.vel = vector(0, 0)
+        self.acc = vector(0, 0)
 
-    def show(self, surface):
-        pygame.draw.rect(surface, (255,255,255), self.rect)
-
-    def update(self, other):
+    def update(self):
+        if self.pos.x > WIDTH + self.rect.w//2:
+            self.pos.x = 0
+        if self.pos.x < 0 - self.rect.w//2:
+            self.pos.x = WIDTH
+        if abs(self.vel.x) < 0.001:
+            self.vel.x = 0
+        # gravity
+        if self.pos.y + self.rect.h//2 >= HEIGHT:
+            self.acc = vector(0, 0)
+            self.vel.y = 0
+        else:
+            self.acc = vector(0, 0.5)
         keys = pygame.key.get_pressed()
-        if self.rect.y > HEIGHT:
-            self.rect.y = 0
-        if not self.rect.colliderect(other):
-            self.rect.y += self.gravity
-
-        if keys[K_RIGHT]:
-            self.rect.x += self.speed
         if keys[K_LEFT]:
-            self.rect.x -= self.speed
-        if keys[K_UP]:
-            self.rect.y -= self.lift
-        if keys[K_DOWN]:
-            pass
+            self.acc.x -= 0.5
+        if keys[K_RIGHT]:
+            self.acc.x += 0.5
+        # friction
+        self.acc.x += self.vel.x * -0.08
+        self.vel += self.acc
+        # motion
+        self.pos += self.vel + 0.5 * self.acc
+        self.rect.center = self.pos

@@ -14,8 +14,9 @@ class Game:
         pygame.init()
         self._running = True
         self._surface = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.sprites = pygame.sprite.Group()
         self.player = Player(WIDTH//2, HEIGHT//2, 32, 32)
-        self.ground = pygame.Rect(0, HEIGHT//2 + 150, WIDTH, HEIGHT - HEIGHT//2 + 150)
+        self.sprites.add(self.player)
 
     def on_cleanup(self):
         pygame.quit()
@@ -26,11 +27,10 @@ class Game:
 
     def on_render(self):
         pygame.display.set_caption(f"Platformer - FPS: {round(self.clock.get_fps(), 1)}")
-        self.player.show(self._surface)
-        pygame.draw.rect(self._surface, (0,125,75), self.ground)
+        self.sprites.draw(self._surface)
 
     def on_loop(self):
-        self.player.update(self.ground)
+        self.sprites.update()
 
     def on_execute(self):
         self.on_init()
