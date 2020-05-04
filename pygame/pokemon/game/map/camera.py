@@ -1,3 +1,5 @@
+import math
+
 from settings import *
 
 class Camera:
@@ -8,10 +10,10 @@ class Camera:
 
     def show(self, master_surface):
         # corner pins
-        x0 = self.dx >> 5
-        x1 = (self.dx >> 5) + T_WIDTH
-        y0 = self.dy >> 5
-        y1 = (self.dy >> 5) + T_HEIGHT
+        x0 = self.dx >> POWER
+        x1 = (self.dx >> POWER) + T_WIDTH
+        y0 = self.dy >> POWER
+        y1 = (self.dy >> POWER) + T_HEIGHT
         print(x0, x1, y0, y1)
         for j in range(y0, y1 + 1):
             y = (j * TILE_SIZE - self.dy)

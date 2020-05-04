@@ -13,7 +13,7 @@ class Map:
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
-        self.surface = pygame.Surface((WIDTH, HEIGHT))
+        self.surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
         self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
 
 class LoaderMap(Map):

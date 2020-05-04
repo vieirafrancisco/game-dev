@@ -1,13 +1,16 @@
 import pygame
+from pygame.locals import *
 
 from settings import *
 from game.entities.units.unity import Unity
+
+vector = pygame.math.Vector2
 
 class Player(Unity):
     def __init__(self, posx, posy, health, speed):
         Unity.__init__(self, posx, posy, health, speed, solid=False)
         self.rect = pygame.Rect(posx * TILE_SIZE, posy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-        self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
+        self.dir = {"UP": 0, "RIGHT": 0, "DOWN": 0, "LEFT": 0}
         self.ismov = False
         
     def show(self, surface):
