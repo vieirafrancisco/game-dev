@@ -6,28 +6,29 @@ import pygame
 from settings import *
 from game.graphics.spritesheet import SpriteSheet
 from game.entities.units.unity import Unity
+from game.entities.units.player import Player
 from game.entities.objects.ground import Ground
+from game.entities.default_entity import DefaultEntity
 from game.utils.functions import e_dist
 
-class Map:
-    def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
-        self.surface = pygame.Surface((CANVAS_WIDTH, CANVAS_HEIGHT))
-        self.src_img, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
-
-class LoaderMap(Map):
+class Map(DefaultEntity):
     def __init__(self, image_url):
-        self.img = pygame.image.load(image_url)
-        Map.__init__(self, self.img.get_height(), self.img.get_width())
+        DefaultEntity.__init__(self, 0, 0, False, shape=(CANVAS_WIDTH, CANVAS_HEIGHT))
+        self.src, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
+        self.color_img = pygame.image.load(image_url)
+        self.rows = self.color_img.get_height()
+        self.cols = self.color_img.get_width()
         self.entities = {}
         for j in range(self.rows):
             for i in range(self.cols):
-                rgba = tuple(self.img.get_at((i, j)))
+                rgba = tuple(self.color_img.get_at((i, j)))
                 tile = self.similarity(rgba)
                 g = Ground(i, j, tile.solid)
-                g.surface.blit(self.src_img, (0, 0), tile)
+                g.image.blit(self.src, (0, 0), tile)
                 self.entities[(i, j)] = g
+
+    def draw(self, surface):
+        print("yeyeyyy")
 
     def add_entity(self, entity):
         x, y = entity.get_pos()
@@ -50,10 +51,10 @@ class LoaderMap(Map):
         else:
             raise Exception("Entity position doesn't exist!")
 
-    def is_instance_of(self, x, y, cls_ref):
+    def is_instance_of(self, x, y, *clsref):
         entity = self.get_entity(x, y)
         if entity is not None:
-            return isinstance(entity, cls_ref)
+            return any([True if isinstance(entity, cr) else False for cr in clsref])
         return False
 
     def is_solid(self, x, y):

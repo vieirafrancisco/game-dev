@@ -1,14 +1,8 @@
-from abc import abstractmethod
-
 from game.entities.entity import Entity
 from settings import *
 
 class Unity(Entity):
-    def __init__(self, posx, posy, health, speed, solid=False):
-        Entity.__init__(self, posx, posy, solid)
+    def __init__(self, x, y, solid, health, speed):
+        Entity.__init__(self, x, y, solid)
         self.health = health
         self.speed = speed
-
-    @abstractmethod
-    def move(self, camera):
-        pass

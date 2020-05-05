@@ -2,8 +2,7 @@ import os
 import pygame
 
 from settings import *
-from game.map.map import Map, LoaderMap
-from game.map.camera import Camera
+from game.map.map import Map
 from game.entities.units.player import Player
 from game.entities.units.enemy import Enemy
 
@@ -11,46 +10,48 @@ class Game:
     def __init__(self):
         self.size = WIDTH, HEIGHT
         self.running = False
-        self._disp_window = None
+        self.surface = None
         self.clock = pygame.time.Clock()
 
-    def on_init(self):
+    def init(self):
         pygame.init()
         self.running = True
-        self._disp_window = pygame.display.set_mode(self.size)
+        self.surface = pygame.display.set_mode(self.size)
         pygame.display.set_caption("Pokémon")
-        self.map = LoaderMap(os.path.join("game","resources", "img", "maps", "map06.png"))
-        self.player = Player(T_WIDTH//2, T_HEIGHT//2, 100, 2)
+        self.sprites = pygame.sprite.Group()
+        self.map = Map(os.path.join("game","resources", "img", "maps", "map06.png"))
+        self.player = Player(self, *PLAYER_POSITION, 100, 2)
+        self.sprites.add(self.map)
+        self.sprites.add(self.player)
         self.enemy = Enemy(10, 9, False, 100, 50, walk_range=3)
         self.enemy2 = Enemy(2, 8, False, 100, 50, walk_range=3)
         self.enemy3 = Enemy(13, 3, False, 100, 50, walk_range=3)
         self.map.add_entity(self.enemy)
         self.map.add_entity(self.enemy2)
         self.map.add_entity(self.enemy3)
-        self.camera = Camera(self.player, self.map)
 
-    def on_cleanup(self):
+    def cleanup(self):
         pygame.quit()
 
-    def on_render(self):
-        self.camera.show(self._disp_window)
+    def render(self):
+        self.sprites.draw(self.surface)
 
-    def on_loop(self):
-        self.camera.update()
+    def loop(self):
+        self.sprites.update()
         pygame.display.set_caption(f"Pokémon - FPS: {round(self.clock.get_fps(), 1)}")
 
-    def on_event(self, event):
+    def event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
 
-    def on_execute(self):
-        self.on_init()
+    def execute(self):
+        self.init()
         while(self.running):
             for event in pygame.event.get():
-                self.on_event(event)
-            self._disp_window.fill((0,0,0))
-            self.on_loop()
-            self.on_render()
+                self.event(event)
+            self.surface.fill((0,0,0))
+            self.loop()
+            self.render()
             pygame.display.flip()
             self.clock.tick(60)
-        self.on_cleanup()
+        self.cleanup()
