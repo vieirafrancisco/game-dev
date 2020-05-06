@@ -17,7 +17,7 @@ PLAYER_POSITION = [T_WIDTH // 2, T_HEIGHT // 2]
 
 # paths
 RESOURCE_PATH = os.path.join("game", "resources")
-SPRITE_CHARACTER_PATH = os.path.join(RESOURCE_PATH, "img", "character")
+SPRITE_CHARACTER_PATH = os.path.join(RESOURCE_PATH, "spritesheets", "character")
 SPRITE_MAP_PATH = os.path.join(RESOURCE_PATH, "img", "maps")
 
 # infinity
@@ -31,3 +31,4 @@ LEFT = 3
 
 # colors
 DEFAULT_COLOR = (75,0,125)
+PINK_BACKGROUD_COLORKEY = (233, 50, 248)

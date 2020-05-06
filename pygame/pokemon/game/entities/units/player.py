@@ -6,6 +6,7 @@ from pygame.locals import *
 from settings import *
 from game.entities.default_entity import DefaultEntity
 from game.map.camera import Camera
+from game.graphics.spritesheet import Spritesheet
 
 vector = pygame.math.Vector2
 
@@ -17,9 +18,9 @@ class Player(DefaultEntity):
     def __init__(self, game, x, y, health, speed):
         DefaultEntity.__init__(self, x, y, True, shape=(64, 64), has_color=False, health=health, speed=speed)
         self.game = game
-        self.spritesheet = load_image(SPRITE_CHARACTER_PATH, "character_tiles.png")
-        self.spritesheet.set_colorkey((233, 50, 248))
-        self.image.blit(self.spritesheet, (0, 0), (64, 0, 128, 64))
+        self.spritesheet = Spritesheet("character", "player_tiles")
+        self.spritesheet.image.set_colorkey(PINK_BACKGROUD_COLORKEY)
+        self.image = self.spritesheet.get_tile_image_by_position(64, 0, 64, 64)
         self.rect.center = (x * TILE_SIZE, y * TILE_SIZE)
         self.camera = Camera(game.surface)
         self.sprite_images = {}
@@ -28,30 +29,10 @@ class Player(DefaultEntity):
         self.ismov = False
 
     def load_sprites(self):
-        sprite_down = pygame.Surface((64 ,64)).convert()
-        sprite_down.fill((233, 50, 248))
-        sprite_down.set_colorkey((233, 50, 248))
-        sprite_down.blit(self.spritesheet, (0, 0), (64, 0, 128, 64))
-        self.sprite_images["DOWN"] = sprite_down
-
-        sprite_up = pygame.Surface((64 ,64)).convert()
-        sprite_up.fill((233, 50, 248))
-        sprite_up.set_colorkey((233, 50, 248))
-        sprite_up.blit(self.spritesheet, (0, 0), (128, 0, 192, 64))
-        self.sprite_images["UP"] = sprite_up
-
-        sprite_right = pygame.Surface((64, 64)).convert()
-        sprite_right.fill((233, 50, 248))
-        sprite_right.set_colorkey((233, 50, 248))
-        sprite_right.blit(self.spritesheet, (0, 0), (0, 64, 64, 128))
-        self.sprite_images["RIGHT"] = sprite_right
-
-        sprite_left = pygame.Surface((64, 64)).convert()
-        sprite_left.fill((233, 50, 248))
-        sprite_left.set_colorkey((233, 50, 248))
-        sprite_left.blit(self.spritesheet, (0, 0), (64, 64, 128, 128))
-        self.sprite_images["LEFT"] = sprite_left
-
+        self.sprite_images["DOWN"] = self.spritesheet.get_tile_image_by_position(64, 0, 64, 64)
+        self.sprite_images["UP"] = self.spritesheet.get_tile_image_by_position(128, 0, 64, 64)
+        self.sprite_images["RIGHT"] = self.spritesheet.get_tile_image_by_position(0, 64, 64, 64)
+        self.sprite_images["LEFT"] = self.spritesheet.get_tile_image_by_position(64, 64, 64, 64)
 
     def update(self):
         self.camera.show(self.game.map)

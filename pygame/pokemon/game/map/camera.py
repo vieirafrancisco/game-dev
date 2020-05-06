@@ -23,5 +23,7 @@ class Camera:
                     entity = tmap.get_entity(i, j)
                     entity.start(tmap, tmap.image, dest)
                 else:
-                    tmap.image.blit(tmap.src, dest, tmap.tiles["default"])
+                    surface = tmap.spritesheet.image
+                    tiles = tmap.spritesheet.tiles
+                    tmap.image.blit(surface, dest, tiles["default"])
         self.master.blit(tmap.image, (0,0))

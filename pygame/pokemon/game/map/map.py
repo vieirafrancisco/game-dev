@@ -4,7 +4,7 @@ import random
 import pygame
 
 from settings import *
-from game.graphics.spritesheet import SpriteSheet
+from game.graphics.spritesheet import Spritesheet
 from game.entities.units.unity import Unity
 from game.entities.units.player import Player
 from game.entities.objects.ground import Ground
@@ -14,7 +14,7 @@ from game.utils.functions import e_dist
 class Map(DefaultEntity):
     def __init__(self, image_url):
         DefaultEntity.__init__(self, 0, 0, False, shape=(CANVAS_WIDTH, CANVAS_HEIGHT))
-        self.src, self.tiles = SpriteSheet("32x32_map_tile_v4.png").get_objects()
+        self.spritesheet = Spritesheet("maps", "32x32_map_tile_v4")
         self.color_img = pygame.image.load(image_url)
         self.rows = self.color_img.get_height()
         self.cols = self.color_img.get_width()
@@ -24,7 +24,7 @@ class Map(DefaultEntity):
                 rgba = tuple(self.color_img.get_at((i, j)))
                 tile = self.similarity(rgba)
                 g = Ground(i, j, tile.solid)
-                g.image.blit(self.src, (0, 0), tile)
+                g.image.blit(self.spritesheet.image, (0, 0), tile)
                 self.entities[(i, j)] = g
 
     def draw(self, surface):
@@ -80,7 +80,8 @@ class Map(DefaultEntity):
     def similarity(self, rgba):
         best_tile = None
         m = INF
-        for tile, obj in self.tiles.items():
+        tiles = self.spritesheet.tiles
+        for tile, obj in tiles.items():
             dist = e_dist(rgba, obj.rgba)
             if dist < m:
                 m = dist
