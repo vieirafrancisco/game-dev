@@ -17,6 +17,8 @@ PLAYER_POSITION = [T_WIDTH // 2, T_HEIGHT // 2]
 
 # paths
 RESOURCE_PATH = os.path.join("game", "resources")
+SPRITE_CHARACTER_PATH = os.path.join(RESOURCE_PATH, "img", "character")
+SPRITE_MAP_PATH = os.path.join(RESOURCE_PATH, "img", "maps")
 
 # infinity
 INF = float('inf')
