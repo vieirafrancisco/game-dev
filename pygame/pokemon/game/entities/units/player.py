@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame.locals import *
 
@@ -9,9 +11,12 @@ vector = pygame.math.Vector2
 
 class Player(DefaultEntity):
     def __init__(self, game, x, y, health, speed):
-        DefaultEntity.__init__(self, x, y, True, health=health, speed=speed)
+        DefaultEntity.__init__(self, x, y, True, shape=(64, 64), has_color=False, health=health, speed=speed)
         self.game = game
-        self.image.fill((255, 0, 0))
+        self.spritesheet = pygame.image.load(os.path.join("game", "resources", "img", "character", "character_tiles.png")).convert()
+        self.spritesheet.set_colorkey((233, 50, 248))
+        self.image.blit(self.spritesheet, (0, 0), (64, 0, 128, 64))
+        self.rect.center = (x * TILE_SIZE, y * TILE_SIZE)
         self.camera = Camera(game.surface)
         self.dir = {"UP": 0, "RIGHT": 0, "DOWN": 0, "LEFT": 0}
         self.ismov = False
