@@ -1,5 +1,44 @@
 {
     "player_tiles":{
-        
+        "down_stand":{
+            "pos": [1, 0],
+            "shape": [64, 64]
+        },
+        "down_m1": {
+            "pos": [1, 2],
+            "shape": [64, 64]
+        },
+        "down_m2": {
+            "pos": [2, 2],
+            "shape": [64, 64]
+        },
+        "up_stand": {
+            "pos": [2, 0],
+            "shape": [64, 64]
+        },
+        "up_m1": {
+            "pos": [0, 3],
+            "shape": [64, 64]
+        },
+        "up_m2": {
+            "pos": [1, 3],
+            "shape": [64, 64]
+        },
+        "right_stand": {
+            "pos": [0, 1],
+            "shape": [64, 64]
+        },
+        "right_m1": {
+            "pos": [2, 1],
+            "shape": [64, 64]
+        },
+        "right_m2": {
+            "pos": [0, 2],
+            "shape": [64, 64]
+        },
+        "left_stand": {
+            "pos": [1, 1],
+            "shape": [64, 64]
+        }
     }
 }

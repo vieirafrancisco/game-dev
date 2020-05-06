@@ -20,7 +20,7 @@ class Player(DefaultEntity):
         self.game = game
         self.spritesheet = Spritesheet("character", "player_tiles")
         self.spritesheet.image.set_colorkey(PINK_BACKGROUD_COLORKEY)
-        self.image = self.spritesheet.get_tile_image_by_position(64, 0, 64, 64)
+        self.image = self.spritesheet.get_tile_image("down_stand")
         self.rect.center = (x * TILE_SIZE, y * TILE_SIZE)
         self.camera = Camera(game.surface)
         self.sprite_images = {}
@@ -29,10 +29,26 @@ class Player(DefaultEntity):
         self.ismov = False
 
     def load_sprites(self):
-        self.sprite_images["DOWN"] = self.spritesheet.get_tile_image_by_position(64, 0, 64, 64)
-        self.sprite_images["UP"] = self.spritesheet.get_tile_image_by_position(128, 0, 64, 64)
-        self.sprite_images["RIGHT"] = self.spritesheet.get_tile_image_by_position(0, 64, 64, 64)
-        self.sprite_images["LEFT"] = self.spritesheet.get_tile_image_by_position(64, 64, 64, 64)
+        # down movement images
+        self.sprite_images["DOWN_STAND"] = self.spritesheet.get_tile_image("down_stand")
+        self.sprite_images["DOWN"] = [
+            self.spritesheet.get_tile_image("down_m1"),
+            self.spritesheet.get_tile_image("down_m2")]
+        # up movement images
+        self.sprite_images["UP_STAND"] = self.spritesheet.get_tile_image("up_stand")
+        self.sprite_images["UP"] = [
+            self.spritesheet.get_tile_image("up_m1"),
+            self.spritesheet.get_tile_image("up_m2")]
+        # right movement images
+        self.sprite_images["RIGHT_STAND"] = self.spritesheet.get_tile_image("right_stand")
+        self.sprite_images["RIGHT"] = [
+            self.spritesheet.get_tile_image("right_m1"),
+            self.spritesheet.get_tile_image("right_m2")]
+        # left movement images
+        self.sprite_images["LEFT_STAND"] = self.spritesheet.get_tile_image("left_stand")
+        self.sprite_images["LEFT"] = [
+            pygame.transform.flip(right_image, False, False)
+            for right_image in self.sprite_images["RIGHT"]]
 
     def update(self):
         self.camera.show(self.game.map)
@@ -40,36 +56,45 @@ class Player(DefaultEntity):
         if keys[K_RIGHT] and not self.ismov:
             self.dir["RIGHT"] = 1
             self.ismov = True
-            self.image = self.sprite_images["RIGHT"]
+            self.image = self.sprite_images["RIGHT_STAND"]
         if keys[K_LEFT] and not self.ismov:
             self.dir["LEFT"] = 1
             self.ismov = True
-            self.image = self.sprite_images["LEFT"]
+            self.image = self.sprite_images["LEFT_STAND"]
         if keys[K_DOWN] and not self.ismov:
             self.dir["DOWN"] = 1
             self.ismov = True
-            self.image = self.sprite_images["DOWN"]
+            self.image = self.sprite_images["DOWN_STAND"]
         if keys[K_UP] and not self.ismov:
             self.dir["UP"] = 1
             self.ismov = True
-            self.image = self.sprite_images["UP"]
+            self.image = self.sprite_images["UP_STAND"]
         is_up = self.dir["UP"] and not self.game.map.has_collision(self.x, self.y-1)
         is_down = self.dir["DOWN"] and not self.game.map.has_collision(self.x, self.y+1)
         is_left = self.dir["LEFT"] and not self.game.map.has_collision(self.x-1, self.y)
         is_right = self.dir["RIGHT"] and not self.game.map.has_collision(self.x+1, self.y)
         if is_up:
             self.camera.dy -= self.speed
+            if self.camera.dy % 4 == 0:
+                self.image = self.sprite_images["UP"][1]
         if is_down:
             self.camera.dy += self.speed
+            if self.camera.dy % 4 == 0:
+                self.image = self.sprite_images["DOWN"][1]
         if is_left:
             self.camera.dx -= self.speed
+            if self.camera.dx % 4 == 0:
+                self.image = self.sprite_images["LEFT"][1]
         if is_right:
             self.camera.dx += self.speed
+            if self.camera.dx % 4 == 0:
+                self.image = self.sprite_images["RIGHT"][1]
         if self.camera.dx % TILE_SIZE == 0 and self.camera.dy % TILE_SIZE == 0:
             if is_up:
                 self.y -= 1
             if is_down:
                 self.y += 1
+                self.image = self.sprite_images["DOWN_STAND"]
             if is_left:
                 self.x -= 1
             if is_right:

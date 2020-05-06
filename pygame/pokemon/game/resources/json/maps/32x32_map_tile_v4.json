@@ -2,26 +2,26 @@
     "32x32_map_tile_v4": {
         "default": {
             "pos": [7,5],
-            "rgba": [0, 162, 232, 255],
             "shape": [32, 32],
+            "rgba": [0, 162, 232, 255],
             "solid": true
         },
         "grass": {
             "pos": [1,1],
-            "rgba": [34, 177, 76, 255],
             "shape": [32, 32],
+            "rgba": [34, 177, 76, 255],
             "solid": false
         },
         "water": {
             "pos": [7,5],
-            "rgba": [0, 162, 232, 255],
             "shape": [32, 32],
+            "rgba": [0, 162, 232, 255],
             "solid": true
         },
         "wall":{
             "pos": [3,0],
-            "rgba": [185, 122, 87, 255],
             "shape": [32, 32],
+            "rgba": [185, 122, 87, 255],
             "solid": true
         } 
     }
