@@ -1,5 +1,6 @@
 import os
 import pygame
+from pygame.locals import *
 
 from settings import *
 from game.map.map import Map
@@ -41,7 +42,7 @@ class Game:
         pygame.display.set_caption(f"Pokémon - FPS: {round(self.clock.get_fps(), 1)}")
 
     def event(self, event):
-        if event.type == pygame.QUIT:
+        if event.type == QUIT:
             self.running = False
 
     def execute(self):

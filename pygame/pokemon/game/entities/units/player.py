@@ -49,8 +49,8 @@ class Player(DefaultEntity):
         # left movement images
         self.sprite_images["LEFT_STAND"] = self.spritesheet.get_tile_image("left_stand")
         self.sprite_images["LEFT"] = [
-            pygame.transform.flip(right_image, False, False)
-            for right_image in self.sprite_images["RIGHT"]]
+            pygame.transform.rotate(pygame.transform.flip(up_image, False, True), 270)
+            for up_image in self.sprite_images["UP"]]
 
     def animate(self, side):
         now = pygame.time.get_ticks()
@@ -64,25 +64,25 @@ class Player(DefaultEntity):
         keys = pygame.key.get_pressed()
         if not self.ismov:
             if keys[K_RIGHT]:
-                self.image = self.sprite_images["RIGHT_STAND"]
+                #self.image = self.sprite_images["RIGHT_STAND"]
                 if not self.game.map.has_collision(self.x + 1, self.y):
                     self.ismov = True
                     self.dir["RIGHT"] = 1
                     self.x += 1
             elif keys[K_UP]:
-                self.image = self.sprite_images["UP_STAND"]
+                #self.image = self.sprite_images["UP_STAND"]
                 if not self.game.map.has_collision(self.x, self.y - 1):
                     self.ismov = True
                     self.dir["UP"] = 1
                     self.y -= 1
             elif keys[K_DOWN]:
-                self.image = self.sprite_images["DOWN_STAND"]
+                #self.image = self.sprite_images["DOWN_STAND"]
                 if not self.game.map.has_collision(self.x, self.y + 1):
                     self.ismov = True
                     self.dir["DOWN"] = 1
                     self.y += 1
             elif keys[K_LEFT]:
-                self.image = self.sprite_images["LEFT_STAND"]
+                #self.image = self.sprite_images["LEFT_STAND"]
                 if not self.game.map.has_collision(self.x - 1, self.y):
                     self.ismov = True
                     self.dir["LEFT"] = 1
@@ -105,6 +105,7 @@ class Player(DefaultEntity):
                 side = "LEFT"
                 self.animate(side)
             if self.camera.dx % TILE_SIZE == 0 and self.camera.dy % TILE_SIZE == 0:
-                self.image = self.sprite_images[f"{side}_STAND"]
+                if not any(pygame.key.get_pressed()):
+                    self.image = self.sprite_images[f"{side}_STAND"]
                 self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
                 self.ismov = False
