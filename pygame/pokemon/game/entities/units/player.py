@@ -27,6 +27,8 @@ class Player(DefaultEntity):
         self.load_sprites()
         self.dir = {"UP": 0, "RIGHT": 0, "DOWN": 0, "LEFT": 0}
         self.ismov = False
+        self.last_update = 0
+        self.curr_frame = 0
 
     def load_sprites(self):
         # down movement images
@@ -50,54 +52,59 @@ class Player(DefaultEntity):
             pygame.transform.flip(right_image, False, False)
             for right_image in self.sprite_images["RIGHT"]]
 
+    def animate(self, side):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > 250:
+            self.last_update = now
+            self.curr_frame = (self.curr_frame + 1) % 2
+            self.image = self.sprite_images[side][self.curr_frame]    
+
     def update(self):
         self.camera.show(self.game.map)
         keys = pygame.key.get_pressed()
-        if keys[K_RIGHT] and not self.ismov:
-            self.dir["RIGHT"] = 1
-            self.ismov = True
-            self.image = self.sprite_images["RIGHT_STAND"]
-        if keys[K_LEFT] and not self.ismov:
-            self.dir["LEFT"] = 1
-            self.ismov = True
-            self.image = self.sprite_images["LEFT_STAND"]
-        if keys[K_DOWN] and not self.ismov:
-            self.dir["DOWN"] = 1
-            self.ismov = True
-            self.image = self.sprite_images["DOWN_STAND"]
-        if keys[K_UP] and not self.ismov:
-            self.dir["UP"] = 1
-            self.ismov = True
-            self.image = self.sprite_images["UP_STAND"]
-        is_up = self.dir["UP"] and not self.game.map.has_collision(self.x, self.y-1)
-        is_down = self.dir["DOWN"] and not self.game.map.has_collision(self.x, self.y+1)
-        is_left = self.dir["LEFT"] and not self.game.map.has_collision(self.x-1, self.y)
-        is_right = self.dir["RIGHT"] and not self.game.map.has_collision(self.x+1, self.y)
-        if is_up:
-            self.camera.dy -= self.speed
-            if self.camera.dy % 4 == 0:
-                self.image = self.sprite_images["UP"][1]
-        if is_down:
-            self.camera.dy += self.speed
-            if self.camera.dy % 4 == 0:
-                self.image = self.sprite_images["DOWN"][1]
-        if is_left:
-            self.camera.dx -= self.speed
-            if self.camera.dx % 4 == 0:
-                self.image = self.sprite_images["LEFT"][1]
-        if is_right:
-            self.camera.dx += self.speed
-            if self.camera.dx % 4 == 0:
-                self.image = self.sprite_images["RIGHT"][1]
-        if self.camera.dx % TILE_SIZE == 0 and self.camera.dy % TILE_SIZE == 0:
-            if is_up:
-                self.y -= 1
-            if is_down:
-                self.y += 1
+        if not self.ismov:
+            if keys[K_RIGHT]:
+                self.image = self.sprite_images["RIGHT_STAND"]
+                if not self.game.map.has_collision(self.x + 1, self.y):
+                    self.ismov = True
+                    self.dir["RIGHT"] = 1
+                    self.x += 1
+            elif keys[K_UP]:
+                self.image = self.sprite_images["UP_STAND"]
+                if not self.game.map.has_collision(self.x, self.y - 1):
+                    self.ismov = True
+                    self.dir["UP"] = 1
+                    self.y -= 1
+            elif keys[K_DOWN]:
                 self.image = self.sprite_images["DOWN_STAND"]
-            if is_left:
-                self.x -= 1
-            if is_right:
-                self.x += 1
-            self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
-            self.ismov = False
+                if not self.game.map.has_collision(self.x, self.y + 1):
+                    self.ismov = True
+                    self.dir["DOWN"] = 1
+                    self.y += 1
+            elif keys[K_LEFT]:
+                self.image = self.sprite_images["LEFT_STAND"]
+                if not self.game.map.has_collision(self.x - 1, self.y):
+                    self.ismov = True
+                    self.dir["LEFT"] = 1
+                    self.x -= 1
+        else:
+            if self.dir["RIGHT"]:
+                self.camera.dx += self.speed
+                side = "RIGHT"
+                self.animate(side)
+            elif self.dir["UP"]:
+                self.camera.dy -= self.speed
+                side = "UP"
+                self.animate(side)
+            elif self.dir["DOWN"]:
+                self.camera.dy += self.speed
+                side = "DOWN"
+                self.animate(side)
+            elif self.dir["LEFT"]:
+                self.camera.dx -= self.speed
+                side = "LEFT"
+                self.animate(side)
+            if self.camera.dx % TILE_SIZE == 0 and self.camera.dy % TILE_SIZE == 0:
+                self.image = self.sprite_images[f"{side}_STAND"]
+                self.dir = {"RIGHT": 0, "LEFT": 0, "UP": 0, "DOWN": 0}
+                self.ismov = False
