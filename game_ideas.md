@@ -39,7 +39,7 @@ Cada robô menor tem uma habilidade básica associada a ele, e ele pode ser usad
 **Características:**
 - O jogo é do tipo shoot de particulas (mira controlada pelo mouse), com mecânica hack in slash
 - O jogador é quem se transforma nos robôs e também nos robôs combinados
-- Os robôs seram elementais, então terá um sistema de efetividade nos combates
+- Os robôs serão elementais, então terá um sistema de efetividade nos combates
 - Existiram arenas onde os inimigos estão posicionados (parecido com o jogo warframe)
 - Mapas gerados automáticamente
 - Itens em locais randômicos (tendo a posibilidade de não conter item algum)
